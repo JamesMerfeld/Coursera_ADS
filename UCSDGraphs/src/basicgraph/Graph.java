@@ -121,8 +121,25 @@ public abstract class Graph {
 	 * @return The degree sequence of this graph.
 	 */
 	public List<Integer> degreeSequence() {
-		// XXX: Implement in part 1 of week 1
-		return null;
+		
+		List<Integer> degrees = new ArrayList<Integer>();
+		
+		int currCount;
+		
+		for (int i = 0; i < this.numVertices; i++) {
+			
+			currCount = 0;
+			
+			currCount += this.getNeighbors(i).size();
+			
+			currCount += this.getInNeighbors(i).size();
+			
+			degrees.add(currCount);
+		}
+		
+		Collections.sort(degrees, Collections.reverseOrder());
+		
+		return degrees;
 	}
 	
 	/**
@@ -228,7 +245,8 @@ public abstract class Graph {
 
 	
 	public static void main (String[] args) {
-		GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
+		//GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
+		GraphLoader.createIntersectionsFile("data/maps/Wescott.map", "data/intersections/Wescott.intersections");
 		
 
 		// For testing of Part 1 functionality
@@ -240,7 +258,8 @@ public abstract class Graph {
 		System.out.println("****");
 		System.out.println("Roads / intersections:");
 		GraphAdjList graphFromFile = new GraphAdjList();
-		GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphFromFile);
+		//GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphFromFile);
+		GraphLoader.loadRoadMap("data/maps/Wescott.map", graphFromFile);
 		System.out.println(graphFromFile);
 		
 		System.out.println("Observe all degrees are <= 12.");
