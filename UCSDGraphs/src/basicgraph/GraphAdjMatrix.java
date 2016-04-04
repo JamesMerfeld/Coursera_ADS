@@ -111,6 +111,8 @@ public class GraphAdjMatrix extends Graph {
 		
 		int x = getNumVertices();
 		
+		List<Integer> twoHops = new ArrayList<Integer>();
+		
 		int[][] newAdjMatrix = new int[x][x];
 		
 		for (int i = 0; i < x; i++) {
@@ -122,11 +124,28 @@ public class GraphAdjMatrix extends Graph {
 					newAdjMatrix[i][j] += adjMatrix[i][k]*adjMatrix[k][j];
 				}
 			}
+		}		
+		
+//		for (int i = 0; i < x; i++) {
+//			
+//			System.out.print("[" + i + "] " + "{");
+//			
+//			for (int j = 0; j < x; j++) {
+//				System.out.print(newAdjMatrix[i][j] + " ");
+//			}
+//			
+//			System.out.println("}");
+//		}
+		
+		for (int i = 0; i < x; i++) {
+			
+			if(newAdjMatrix[v][i] == 2) {
+
+				twoHops.add(i);
+			}
 		}
 		
-		// Still need to build up list of two-hop neighbors from product matrix
-		
-		return null;
+		return twoHops;
 	}
 	
 	/**
@@ -145,6 +164,4 @@ public class GraphAdjMatrix extends Graph {
 		}
 		return s;
 	}
-
-
 }

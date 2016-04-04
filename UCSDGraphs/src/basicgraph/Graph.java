@@ -257,31 +257,34 @@ public abstract class Graph {
 		
 		System.out.println("****");
 		System.out.println("Roads / intersections:");
-		GraphAdjList graphFromFile = new GraphAdjList();
+		//GraphAdjList graphFromFile = new GraphAdjList();
+		GraphAdjMatrix graphFromFile = new GraphAdjMatrix();
 		//GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphFromFile);
 		GraphLoader.loadRoadMap("data/maps/Wescott.map", graphFromFile);
 		System.out.println(graphFromFile);
 		
-		System.out.println("Observe all degrees are <= 12.");
-		System.out.println("****");
-
-		System.out.println("\n****");
+		for (int i = 0; i < graphFromFile.getNumVertices(); i++) {
+			System.out.println(i + ": " + graphFromFile.getDistance2(i));
+		}
+//		
+//		System.out.println("Observe all degrees are <= 12.");
+//		System.out.println("****");
+//
+//		System.out.println("\n****");
 		
 		// You can test with real road data here.  Use the data files in data/maps
 		
-		System.out.println("Flight data:");
-		GraphAdjList airportGraph = new GraphAdjList();
-		GraphLoader.loadRoutes("data/airports/routesUA.dat", airportGraph);
-		System.out.println(airportGraph);
-		System.out.println("Observe most degrees are small (1-30), eight are over 100.");
-		System.out.println("****");
-		
-		//For testing Part 2 functionality
-		// Test your distance2 code here.
-		System.out.println("Testing distance-two methods on sample graphs...");
-		System.out.println("Goal: implement method using two approaches.");
-
-
+//		System.out.println("Flight data:");
+//		GraphAdjList airportGraph = new GraphAdjList();
+//		GraphLoader.loadRoutes("data/airports/routesUA.dat", airportGraph);
+//		System.out.println(airportGraph);
+//		System.out.println("Observe most degrees are small (1-30), eight are over 100.");
+//		System.out.println("****");
+//		
+//		//For testing Part 2 functionality
+//		// Test your distance2 code here.
+//		System.out.println("Testing distance-two methods on sample graphs...");
+//		System.out.println("Goal: implement method using two approaches.");
 		
 	}
 }
