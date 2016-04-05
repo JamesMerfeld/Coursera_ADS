@@ -258,33 +258,27 @@ public abstract class Graph {
 		System.out.println("****");
 		System.out.println("Roads / intersections:");
 		//GraphAdjList graphFromFile = new GraphAdjList();
-		GraphAdjMatrix graphFromFile = new GraphAdjMatrix();
-		//GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphFromFile);
-		GraphLoader.loadRoadMap("data/maps/Wescott.map", graphFromFile);
-		System.out.println(graphFromFile);
+		GraphAdjMatrix graphFromFileMatrix = new GraphAdjMatrix();
+		GraphAdjList graphFromFileList = new GraphAdjList();
+		//GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphFromFileMatrix);
+		GraphLoader.loadRoadMap("data/maps/Wescott.map", graphFromFileMatrix);
+		//GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphFromFileList);
+		GraphLoader.loadRoadMap("data/maps/Wescott.map", graphFromFileList);
+		System.out.println(graphFromFileMatrix);
+		System.out.println(graphFromFileList);
 		
-		for (int i = 0; i < graphFromFile.getNumVertices(); i++) {
-			System.out.println(i + ": " + graphFromFile.getDistance2(i));
+		for (int i = 0; i < graphFromFileMatrix.getNumVertices(); i++) {
+			
+			List<Integer> listMatrix = graphFromFileMatrix.getDistance2(i);
+			
+			List<Integer> listList = graphFromFileList.getDistance2(i);
+			
+			if(listMatrix.containsAll(listList) && listList.containsAll(listMatrix)) {
+				System.out.println("***PASS***");
+			}
+			else {
+				System.out.println("***FAIL*** " + i + ": " + listMatrix + " - " + listList);
+			}
 		}
-//		
-//		System.out.println("Observe all degrees are <= 12.");
-//		System.out.println("****");
-//
-//		System.out.println("\n****");
-		
-		// You can test with real road data here.  Use the data files in data/maps
-		
-//		System.out.println("Flight data:");
-//		GraphAdjList airportGraph = new GraphAdjList();
-//		GraphLoader.loadRoutes("data/airports/routesUA.dat", airportGraph);
-//		System.out.println(airportGraph);
-//		System.out.println("Observe most degrees are small (1-30), eight are over 100.");
-//		System.out.println("****");
-//		
-//		//For testing Part 2 functionality
-//		// Test your distance2 code here.
-//		System.out.println("Testing distance-two methods on sample graphs...");
-//		System.out.println("Goal: implement method using two approaches.");
-		
 	}
 }

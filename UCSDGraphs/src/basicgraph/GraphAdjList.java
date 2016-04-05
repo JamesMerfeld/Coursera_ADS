@@ -1,6 +1,7 @@
 package basicgraph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,20 @@ public class GraphAdjList extends Graph {
 	 */		
 	 public List<Integer> getDistance2(int v) {
 		 // XXX: Implement this method in week 1
-		 return null;
+		 
+		 List<Integer> twoHops = new ArrayList<Integer>();
+		 
+		 List<Integer> list1 = adjListsMap.get(v);
+		 
+		 for(Integer i : list1) {
+			 
+			 twoHops.addAll(adjListsMap.get(i));
+		 }
+		 
+		 // Not required, but makes visual comparison easier
+		 Collections.sort(twoHops);
+		 
+		 return twoHops;
 	}
 	
 	/**

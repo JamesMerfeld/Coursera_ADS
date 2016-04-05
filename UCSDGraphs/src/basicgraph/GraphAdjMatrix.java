@@ -1,6 +1,7 @@
 package basicgraph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,24 +127,18 @@ public class GraphAdjMatrix extends Graph {
 			}
 		}		
 		
-//		for (int i = 0; i < x; i++) {
-//			
-//			System.out.print("[" + i + "] " + "{");
-//			
-//			for (int j = 0; j < x; j++) {
-//				System.out.print(newAdjMatrix[i][j] + " ");
-//			}
-//			
-//			System.out.println("}");
-//		}
-		
 		for (int i = 0; i < x; i++) {
 			
-			if(newAdjMatrix[v][i] == 2) {
+			if(newAdjMatrix[v][i] > 0) {
 
-				twoHops.add(i);
+				for (int j = 0; j < newAdjMatrix[v][i]; j++) {
+					twoHops.add(i);
+				}
 			}
 		}
+		
+		// Not required, but makes visual comparison easier
+		Collections.sort(twoHops);
 		
 		return twoHops;
 	}
