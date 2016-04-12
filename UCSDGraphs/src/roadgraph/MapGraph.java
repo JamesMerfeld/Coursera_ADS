@@ -8,7 +8,10 @@
 package roadgraph;
 
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -23,15 +26,27 @@ import util.GraphLoader;
  *
  */
 public class MapGraph {
-	//TODO: Add your member variables here in WEEK 2
 	
+	private Map<GeographicPoint, MapNode> nodes;
+	
+	private int numVerticies;
+	
+	private int numEdges;
+	
+	private Set<MapNode> nodeSet;
 	
 	/** 
 	 * Create a new empty MapGraph 
 	 */
 	public MapGraph()
 	{
-		// TODO: Implement in this constructor in WEEK 2
+		nodes = new HashMap<GeographicPoint, MapNode>();
+		
+		numVerticies = 0;
+		
+		numEdges = 0;
+		
+		nodeSet = new HashSet<MapNode>();;
 	}
 	
 	/**
@@ -40,8 +55,7 @@ public class MapGraph {
 	 */
 	public int getNumVertices()
 	{
-		//TODO: Implement this method in WEEK 2
-		return 0;
+		return numVerticies;
 	}
 	
 	/**
@@ -50,8 +64,11 @@ public class MapGraph {
 	 */
 	public Set<GeographicPoint> getVertices()
 	{
-		//TODO: Implement this method in WEEK 2
-		return null;
+		Set<GeographicPoint> verticies = new HashSet<GeographicPoint>();
+		
+		// TODO: Finish me...
+		
+		return verticies;
 	}
 	
 	/**
@@ -60,8 +77,7 @@ public class MapGraph {
 	 */
 	public int getNumEdges()
 	{
-		//TODO: Implement this method in WEEK 2
-		return 0;
+		return numEdges;
 	}
 
 	
@@ -75,8 +91,26 @@ public class MapGraph {
 	 */
 	public boolean addVertex(GeographicPoint location)
 	{
-		// TODO: Implement this method in WEEK 2
-		return false;
+		if (location == null) {
+			
+			//Null location reference
+			return false;
+		}
+		
+		
+		if (nodes.containsKey(location)) {
+			
+			// Node already in graph
+			return false;
+		}
+		
+		// Create new node
+		MapNode newNode = new MapNode(location);
+		
+		// Store new node in graph
+		nodes.put(location, newNode);
+		
+		return true;
 	}
 	
 	/**
@@ -94,7 +128,28 @@ public class MapGraph {
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) throws IllegalArgumentException {
 
-		//TODO: Implement this method in WEEK 2
+		if ( from == null ||
+			 to == null ||
+			 roadName == null ||
+			 roadType == null ||
+			 length == 0 ) 
+		{
+			throw new IllegalArgumentException("Illegal argument");
+		}
+		
+		if (nodes.containsKey(from) && nodes.containsKey(to)) {
+			
+			MapNode startNode = nodes.get(from);
+			
+			startNode.addEdge(to, from, roadName, roadType, length);
+			
+			//TODO: Finish me...(not node with MapNode's addEdge function)
+		}
+		else
+		{
+			throw new IllegalArgumentException("One or both endpoints do not exist");
+		}
+		
 		
 	}
 	
