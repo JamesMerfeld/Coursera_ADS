@@ -27,4 +27,9 @@ public class MapEdge {
 		
 		distance = length;
 	}
+	
+	public GeographicPoint getDestination() {
+		
+		return new GeographicPoint(end.getX(), end.getY());
+	}
 }

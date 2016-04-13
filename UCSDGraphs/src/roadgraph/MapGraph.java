@@ -8,10 +8,13 @@
 package roadgraph;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -29,11 +32,11 @@ public class MapGraph {
 	
 	private Map<GeographicPoint, MapNode> nodes;
 	
-	private int numVerticies;
+	private int numVertices;
 	
 	private int numEdges;
 	
-	private Set<MapNode> nodeSet;
+	private Set<GeographicPoint> nodeSet;
 	
 	/** 
 	 * Create a new empty MapGraph 
@@ -42,11 +45,11 @@ public class MapGraph {
 	{
 		nodes = new HashMap<GeographicPoint, MapNode>();
 		
-		numVerticies = 0;
+		numVertices = 0;
 		
 		numEdges = 0;
 		
-		nodeSet = new HashSet<MapNode>();;
+		nodeSet = new HashSet<GeographicPoint>();
 	}
 	
 	/**
@@ -55,7 +58,7 @@ public class MapGraph {
 	 */
 	public int getNumVertices()
 	{
-		return numVerticies;
+		return numVertices;
 	}
 	
 	/**
@@ -63,12 +66,8 @@ public class MapGraph {
 	 * @return The vertices in this graph as GeographicPoints
 	 */
 	public Set<GeographicPoint> getVertices()
-	{
-		Set<GeographicPoint> verticies = new HashSet<GeographicPoint>();
-		
-		// TODO: Finish me...
-		
-		return verticies;
+	{	
+		return new HashSet<GeographicPoint>(nodeSet);
 	}
 	
 	/**
@@ -104,11 +103,13 @@ public class MapGraph {
 			return false;
 		}
 		
-		// Create new node
+		nodeSet.add(location);
+		
 		MapNode newNode = new MapNode(location);
 		
-		// Store new node in graph
 		nodes.put(location, newNode);
+		
+		numVertices++;
 		
 		return true;
 	}
@@ -132,7 +133,7 @@ public class MapGraph {
 			 to == null ||
 			 roadName == null ||
 			 roadType == null ||
-			 length == 0 ) 
+			 length < 0 ) 
 		{
 			throw new IllegalArgumentException("Illegal argument");
 		}
@@ -143,14 +144,13 @@ public class MapGraph {
 			
 			startNode.addEdge(to, from, roadName, roadType, length);
 			
-			//TODO: Finish me...(not node with MapNode's addEdge function)
+			numEdges++;
 		}
 		else
 		{
+			// One or both of the points have not been added to the graph
 			throw new IllegalArgumentException("One or both endpoints do not exist");
 		}
-		
-		
 	}
 	
 
@@ -178,11 +178,63 @@ public class MapGraph {
 	public List<GeographicPoint> bfs(GeographicPoint start, 
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 2
+		
+		Queue<MapNode> queue = new LinkedList<MapNode>();
+		
+		Set<MapNode> visited = new HashSet<MapNode>();
+		
+		Map<MapNode, MapNode> parent = new HashMap<MapNode, MapNode>();
+		
+		MapNode curr;
+		
+		queue.add(nodes.get(start));
+		
+		while (!queue.isEmpty()) {
+			
+			curr = queue.remove();			
+					
+			// Check to see if we found the goal node
+			if(goal.equals(curr.getPosition())) {
+				
+				// Found goal!
+				List<GeographicPoint> intersections = new ArrayList<GeographicPoint>();
+				
+				GeographicPoint p = goal;
+				
+				while (!p.equals(start)) {
+					
+					intersections.add(p);
+					
+					p = parent.get(curr).getPosition();
+				}
+				
+				// Add start
+				intersections.add(p);
+				
+				return intersections;
+			}
+			
+			List<MapEdge> neighbors = curr.getEdges();
+							
+			for (MapEdge neighbor : neighbors) {
+				
+				MapNode n = nodes.get(neighbor.getDestination());
+				
+				if (!visited.contains(n)) {
+					
+					visited.add(n);
+					
+					parent.put(n, curr);
+					
+					queue.add(n);
+				}
+			}
+		}
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
 
+		// Didn't find goal
 		return null;
 	}
 	
@@ -258,8 +310,15 @@ public class MapGraph {
 	{
 		System.out.print("Making a new map...");
 		MapGraph theMap = new MapGraph();
-		System.out.print("DONE. \nLoading the map...");
+		System.out.println("DONE. \nLoading the map...");
 		GraphLoader.loadRoadMap("data/testdata/simpletest.map", theMap);
+		
+		GeographicPoint start = new GeographicPoint(1.0,1.0);
+		
+		GeographicPoint goal = new GeographicPoint(8.0,-1.0);
+		
+		System.out.println("Intersections: " + theMap.bfs(start, goal));
+		
 		System.out.println("DONE.");
 		
 		// You can use this method for testing.  

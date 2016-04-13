@@ -25,5 +25,15 @@ public class MapNode {
 		
 		edges.add(newEdge);	
 	}
+	
+	public List<MapEdge> getEdges() {
+		
+		return new ArrayList<MapEdge>(edges);
+	}
+	
+	public GeographicPoint getPosition() {
+		
+		return new GeographicPoint(position.getX(), position.getY()); 
+	}
 
 }
