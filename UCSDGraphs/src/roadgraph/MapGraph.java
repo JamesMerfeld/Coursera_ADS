@@ -140,7 +140,8 @@ public class MapGraph {
 		
 		if (nodes.containsKey(from) && nodes.containsKey(to)) {
 			
-			MapNode startNode = nodes.get(from);
+//			MapNode startNode = nodes.get(from);
+			MapNode startNode = nodes.get(to);
 			
 			startNode.addEdge(to, from, roadName, roadType, length);
 			
@@ -189,6 +190,8 @@ public class MapGraph {
 		
 		queue.add(nodes.get(start));
 		
+		visited.add(nodes.get(start));
+		
 		while (!queue.isEmpty()) {
 			
 			curr = queue.remove();			
@@ -205,7 +208,7 @@ public class MapGraph {
 					
 					intersections.add(p);
 					
-					p = parent.get(curr).getPosition();
+					p = parent.get(nodes.get(p)).getPosition();
 				}
 				
 				// Add start
@@ -223,6 +226,9 @@ public class MapGraph {
 				if (!visited.contains(n)) {
 					
 					visited.add(n);
+					
+					System.out.print("n: ["+ n.getPosition().getX() + ", " + n.getPosition().getY() + "]");
+					System.out.println(" curr: ["+ curr.getPosition().getX() + ", " + curr.getPosition().getY() + "]");
 					
 					parent.put(n, curr);
 					
@@ -316,6 +322,7 @@ public class MapGraph {
 		GeographicPoint start = new GeographicPoint(1.0,1.0);
 		
 		GeographicPoint goal = new GeographicPoint(8.0,-1.0);
+		//GeographicPoint goal = new GeographicPoint(4.0,1.0);
 		
 		System.out.println("Intersections: " + theMap.bfs(start, goal));
 		
