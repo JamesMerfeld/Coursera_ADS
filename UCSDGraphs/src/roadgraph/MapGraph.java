@@ -9,6 +9,7 @@ package roadgraph;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -194,7 +195,7 @@ public class MapGraph {
 		
 		while (!queue.isEmpty()) {
 			
-			curr = queue.remove();			
+			curr = queue.remove();
 					
 			// Check to see if we found the goal node
 			if(goal.equals(curr.getPosition())) {
@@ -214,6 +215,9 @@ public class MapGraph {
 				// Add start
 				intersections.add(p);
 				
+				//Reverse order to start --> goal
+				Collections.reverse(intersections);
+				
 				return intersections;
 			}
 			
@@ -225,10 +229,9 @@ public class MapGraph {
 				
 				if (!visited.contains(n)) {
 					
-					visited.add(n);
+					nodeSearched.accept(n.getPosition());
 					
-					System.out.print("n: ["+ n.getPosition().getX() + ", " + n.getPosition().getY() + "]");
-					System.out.println(" curr: ["+ curr.getPosition().getX() + ", " + curr.getPosition().getY() + "]");
+					visited.add(n);
 					
 					parent.put(n, curr);
 					
@@ -236,9 +239,6 @@ public class MapGraph {
 				}
 			}
 		}
-		
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
 
 		// Didn't find goal
 		return null;
