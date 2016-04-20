@@ -32,4 +32,8 @@ public class MapEdge {
 		
 		return new GeographicPoint(end.getX(), end.getY());
 	}
+	
+	public double getDistance() {
+		return distance;
+	}
 }

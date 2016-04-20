@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -270,11 +272,80 @@ public class MapGraph {
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 3
-
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
+		Queue<MapNode> queue = new PriorityQueue<MapNode>();
 		
+		Set<MapNode> visited = new HashSet<MapNode>();
+		
+		Map<MapNode, MapNode> parent = new HashMap<MapNode, MapNode>();
+		
+		MapNode curr;
+		
+		Iterator it = nodes.entrySet().iterator();
+		
+		while(it.hasNext()) {
+			Map.Entry m = (Map.Entry)it.next();
+		    ((MapNode)m.getValue()).setDistanceFromStart(Double.POSITIVE_INFINITY);
+		}
+		
+		curr = nodes.get(start);
+		
+		curr.setDistanceFromStart(0.0);
+		
+		queue.add(curr);
+		
+		while (!queue.isEmpty()) {
+			
+			curr = queue.remove();
+			
+			if (!visited.contains(curr)) {
+				
+				visited.add(curr);
+				
+				// Check to see if we found the goal node
+				if(goal.equals(curr.getPosition())) {
+					
+					// Found goal!
+					List<GeographicPoint> intersections = new ArrayList<GeographicPoint>();
+					
+					GeographicPoint p = goal;
+					
+					while (!p.equals(start)) {
+						
+						intersections.add(p);
+						
+						p = parent.get(nodes.get(p)).getPosition();
+					}
+					
+					// Add start
+					intersections.add(p);
+					
+					//Reverse order to start --> goal
+					Collections.reverse(intersections);
+					
+					return intersections;
+				}
+				
+				List<MapEdge> neighbors = curr.getEdges();
+				
+				for (MapEdge neighbor : neighbors) {
+					
+					MapNode n = nodes.get(neighbor.getDestination());
+					
+					if (!visited.contains(n) && (curr.getDistanceFromStart() < n.getDistanceFromStart())) {
+					
+						n.setDistanceFromStart(curr.getDistanceFromStart() + neighbor.getDistance());
+						
+						nodeSearched.accept(n.getPosition());
+						
+						parent.put(n, curr);
+						
+						queue.add(n);
+					}
+				}				
+			}			
+		}
+		
+		// Didn't find goal
 		return null;
 	}
 
@@ -324,9 +395,12 @@ public class MapGraph {
 		GeographicPoint goal = new GeographicPoint(8.0,-1.0);
 		//GeographicPoint goal = new GeographicPoint(4.0,1.0);
 		
-		System.out.println("Intersections: " + theMap.bfs(start, goal));
+		//System.out.println("Intersections: " + theMap.bfs(start, goal));
+		System.out.println("Intersections: " + theMap.dijkstra(start, goal));
 		
 		System.out.println("DONE.");
+		
+		//theMap.dijkstra(start, goal);
 		
 		// You can use this method for testing.  
 		
