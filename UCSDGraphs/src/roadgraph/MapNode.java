@@ -21,7 +21,7 @@ public class MapNode implements Comparable<MapNode>{
 		
 		distanceFromStart = 0;
 	}
-	
+
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
 			String roadType, double length) {
 		
@@ -46,6 +46,7 @@ public class MapNode implements Comparable<MapNode>{
 	}
 	
 	public void setDistanceFromStart(double d) {
+		
 		distanceFromStart = d;
 	}
 

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -270,8 +271,17 @@ public class MapGraph {
 	 *   start to goal (including both start and goal).
 	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
-										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
+			  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
+		return dijkstra(start, goal, nodeSearched, false);
+	}
+	
+	
+	public List<GeographicPoint> dijkstra(GeographicPoint start, 
+										  GeographicPoint goal, 
+										  Consumer<GeographicPoint> nodeSearched,
+										  boolean aStarSearch)
+	{	
 		Queue<MapNode> queue = new PriorityQueue<MapNode>();
 		
 		Set<MapNode> visited = new HashSet<MapNode>();
@@ -300,6 +310,7 @@ public class MapGraph {
 			if (!visited.contains(curr)) {
 				
 				visited.add(curr);
+				System.out.println("Visiting: " + curr.getPosition());
 				
 				// Check to see if we found the goal node
 				if(goal.equals(curr.getPosition())) {
@@ -322,6 +333,8 @@ public class MapGraph {
 					//Reverse order to start --> goal
 					Collections.reverse(intersections);
 					
+					System.out.println("# Nodes visited: " + visited.size());
+					
 					return intersections;
 				}
 				
@@ -331,9 +344,15 @@ public class MapGraph {
 					
 					MapNode n = nodes.get(neighbor.getDestination());
 					
-					if (!visited.contains(n) && (curr.getDistanceFromStart() < n.getDistanceFromStart())) {
+					double nextDistance = curr.getDistanceFromStart() + neighbor.getDistance();
 					
-						n.setDistanceFromStart(curr.getDistanceFromStart() + neighbor.getDistance());
+					if (aStarSearch) {
+						nextDistance += n.getPosition().distance(goal);
+					}
+					
+					if (!visited.contains(n) && (nextDistance < n.getDistanceFromStart())) {
+					
+						n.setDistanceFromStart(nextDistance);
 						
 						nodeSearched.accept(n.getPosition());
 						
@@ -373,12 +392,41 @@ public class MapGraph {
 	public List<GeographicPoint> aStarSearch(GeographicPoint start, 
 											 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 3
+		return dijkstra(start, goal, nodeSearched, true);
+	}
+	
+	public void testPQ() {
 		
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
+		Queue<MapNode> queue = new PriorityQueue<MapNode>();
 		
-		return null;
+		Iterator it = nodes.entrySet().iterator();
+		
+		Random random  = new Random();
+		
+		System.out.print("Nodes: ");
+		
+		while(it.hasNext()) {
+			
+			Map.Entry m = (Map.Entry)it.next();
+			
+			int tmp = random.nextInt(100);
+			
+			System.out.print(tmp + " ");
+			
+		    ((MapNode)m.getValue()).setDistanceFromStart(tmp);
+		    
+		    queue.add(((MapNode)m.getValue()));
+		}
+		
+		System.out.print("PQ: ");
+		
+		while (!queue.isEmpty()) {
+			
+			MapNode tmp = queue.remove();
+			
+			System.out.print(tmp.getDistanceFromStart() + " ");
+		}
+		System.out.println();
 	}
 
 	
@@ -397,10 +445,9 @@ public class MapGraph {
 		
 		//System.out.println("Intersections: " + theMap.bfs(start, goal));
 		System.out.println("Intersections: " + theMap.dijkstra(start, goal));
+		System.out.println("Intersections: " + theMap.aStarSearch(start, goal));
 		
 		System.out.println("DONE.");
-		
-		//theMap.dijkstra(start, goal);
 		
 		// You can use this method for testing.  
 		
