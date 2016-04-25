@@ -13,6 +13,8 @@ public class MapNode implements Comparable<MapNode>{
 	
 	private double distanceFromStart; 
 	
+	private double estimatedDistance;
+	
 	public MapNode(GeographicPoint p) {
 		
 		position = new GeographicPoint(p.getX(), p.getY());
@@ -49,13 +51,24 @@ public class MapNode implements Comparable<MapNode>{
 		
 		distanceFromStart = d;
 	}
+	
+	public double getEstimatedDistance() {
+		
+		return estimatedDistance;
+	}
+	
+	public void setEstimatedDistnce(double d) {
+		
+		estimatedDistance = d;
+	}
 
 	@Override
 	public int compareTo(MapNode node) {
 		
-		double d = node.getDistanceFromStart(); 
+		double d = node.getDistanceFromStart();
+		double e = node.getEstimatedDistance();
 		
-	    if (this.distanceFromStart < d) {
+	    if ((this.distanceFromStart + this.estimatedDistance) < (d + e)) {
 	        return -1;
 	    }
 	    else {

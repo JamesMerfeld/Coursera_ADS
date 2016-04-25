@@ -295,6 +295,7 @@ public class MapGraph {
 		while(it.hasNext()) {
 			Map.Entry m = (Map.Entry)it.next();
 		    ((MapNode)m.getValue()).setDistanceFromStart(Double.POSITIVE_INFINITY);
+		    ((MapNode)m.getValue()).setEstimatedDistnce(Double.POSITIVE_INFINITY);
 		}
 		
 		curr = nodes.get(start);
@@ -310,7 +311,6 @@ public class MapGraph {
 			if (!visited.contains(curr)) {
 				
 				visited.add(curr);
-				System.out.println("Visiting: " + curr.getPosition());
 				
 				// Check to see if we found the goal node
 				if(goal.equals(curr.getPosition())) {
@@ -333,8 +333,6 @@ public class MapGraph {
 					//Reverse order to start --> goal
 					Collections.reverse(intersections);
 					
-					System.out.println("# Nodes visited: " + visited.size());
-					
 					return intersections;
 				}
 				
@@ -346,13 +344,16 @@ public class MapGraph {
 					
 					double nextDistance = curr.getDistanceFromStart() + neighbor.getDistance();
 					
-					if (aStarSearch) {
-						nextDistance += n.getPosition().distance(goal);
-					}
-					
 					if (!visited.contains(n) && (nextDistance < n.getDistanceFromStart())) {
 					
 						n.setDistanceFromStart(nextDistance);
+						
+						if (aStarSearch) {
+							n.setEstimatedDistnce(n.getPosition().distance(goal));
+						}
+						else {
+							n.setEstimatedDistnce(0);
+						}
 						
 						nodeSearched.accept(n.getPosition());
 						
@@ -394,43 +395,7 @@ public class MapGraph {
 	{
 		return dijkstra(start, goal, nodeSearched, true);
 	}
-	
-	public void testPQ() {
-		
-		Queue<MapNode> queue = new PriorityQueue<MapNode>();
-		
-		Iterator it = nodes.entrySet().iterator();
-		
-		Random random  = new Random();
-		
-		System.out.print("Nodes: ");
-		
-		while(it.hasNext()) {
-			
-			Map.Entry m = (Map.Entry)it.next();
-			
-			int tmp = random.nextInt(100);
-			
-			System.out.print(tmp + " ");
-			
-		    ((MapNode)m.getValue()).setDistanceFromStart(tmp);
-		    
-		    queue.add(((MapNode)m.getValue()));
-		}
-		
-		System.out.print("PQ: ");
-		
-		while (!queue.isEmpty()) {
-			
-			MapNode tmp = queue.remove();
-			
-			System.out.print(tmp.getDistanceFromStart() + " ");
-		}
-		System.out.println();
-	}
 
-	
-	
 	public static void main(String[] args)
 	{
 		System.out.print("Making a new map...");
